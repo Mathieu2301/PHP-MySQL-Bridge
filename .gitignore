@@ -1,0 +1,14 @@
+# npm
+node_modules/
+package-lock.json
+
+# vscode
+.vscode/
+
+# credential files
+test.js
+mysql.php
+
+# dotenv environment variables file
+.env
+.env.test

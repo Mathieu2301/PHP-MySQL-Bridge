@@ -1,0 +1,20 @@
+{
+  "name": "php-socketio-mysql-bridge",
+  "version": "1.0.0",
+  "description": "PHP SocketIO MySQL Bridge",
+  "main": "main.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "SocketIO",
+    "MySQL",
+    "PHP",
+    "Bridge"
+  ],
+  "author": "Mathieu Colmon (usp-3.fr)",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}
