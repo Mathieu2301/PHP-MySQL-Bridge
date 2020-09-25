@@ -5,7 +5,7 @@ module.exports = (hostname = '', auth = '', localPort = 400, certs = { key: null
   const io = require('socket.io')(server);
   
   let connected = false;
-  let sendRequest = () => new Promise();
+  let sendRequest = () => new Promise((_, err) => err({ error: true, message: 'Not connected to the server...' }));
 
   io.on('connection', (socket) => {
     if (connected) {
