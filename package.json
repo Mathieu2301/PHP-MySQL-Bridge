@@ -1,6 +1,6 @@
 {
-  "name": "php-socketio-mysql-bridge",
-  "version": "1.0.0",
+  "name": "psmb",
+  "version": "0.3.0",
   "description": "PHP SocketIO MySQL Bridge",
   "main": "main.js",
   "scripts": {
