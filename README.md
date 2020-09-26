@@ -31,7 +31,7 @@ npm install https://github.com/Mathieu2301/PHP-MySQL-SocketIO-Bridge.git
  Start by importing the library
 
 ```javascript
-const PSMB = require('php-socketio-mysql-bridge');
+const PSMB = require('psmb');
 ```
 
 ### Connect to the bridge (your PHP server)
