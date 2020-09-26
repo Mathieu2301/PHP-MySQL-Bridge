@@ -43,7 +43,7 @@ const mysql = PMSB('my-php-host.com', 'PASS');
 ```javascript
 (async () => {
   // Fetch example
-  await mysql.query('SELECT * FROM my_table').exec();
+  await mysql.query('UPDATE my_table SET name = ? WHERE id = ?', [ 'test', 2 ]).exec();
 
   // Fetch example (Returns only the first element)
   const fetchRq = await mysql.query('SELECT * FROM my_table').fetch();
