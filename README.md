@@ -88,6 +88,20 @@ const data = await sql.query('SELECT * FROM my_table').fetchAll();
 console.log(Date.now() - startTime, 'ms', data);
 ```
 
+Use custom port
+```javascript
+const mysql = PSMB('my-php-host.com', 'PASS', 8000);
+```
+
+Use SSL Sockets
+```javascript
+const fs = require('fs');
+const mysql = PSMB('my-php-host.com', 'PASS', 443, {
+  cert: fs.readFileSync('./certif.crt'),
+  key: fs.readFileSync('./private.key'),
+});
+```
+
 ___
 ## Problems
 
