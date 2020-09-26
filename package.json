@@ -1,5 +1,5 @@
 {
-  "name": "psmb",
+  "name": "pmsb",
   "version": "0.3.0",
   "description": "PHP SocketIO MySQL Bridge",
   "main": "main.js",
