@@ -31,12 +31,12 @@ npm install https://github.com/Mathieu2301/PHP-MySQL-SocketIO-Bridge.git
  Start by importing the library
 
 ```javascript
-const PSMB = require('psmb');
+const PMSB = require('pmsb');
 ```
 
 ### Connect to the bridge (your PHP server)
 ```javascript
-const mysql = PSMB('my-php-host.com', 'PASS');
+const mysql = PMSB('my-php-host.com', 'PASS');
 ```
 
 ### Send MySQL request
@@ -90,13 +90,13 @@ console.log(Date.now() - startTime, 'ms', data);
 
 Use custom port
 ```javascript
-const mysql = PSMB('my-php-host.com', 'PASS', 8000);
+const mysql = PMSB('my-php-host.com', 'PASS', 8000);
 ```
 
 Use SSL Sockets
 ```javascript
 const fs = require('fs');
-const mysql = PSMB('my-php-host.com', 'PASS', 443, {
+const mysql = PMSB('my-php-host.com', 'PASS', 443, {
   cert: fs.readFileSync('./certif.crt'),
   key: fs.readFileSync('./private.key'),
 });
