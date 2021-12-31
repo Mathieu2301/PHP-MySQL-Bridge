@@ -1,51 +1,53 @@
-const https = require('https'), http = require('http');
+const https = require('https');
 
-module.exports = (hostname = '', auth = '', localPort = 400, certs = { key: null, cert: null }) => {
-  const server = (certs.key && certs.cert ? https.createServer(certs) : http.createServer());
-  const io = require('socket.io')(server);
-  
-  let connected = false;
-  let sendRequest = () => new Promise((_, err) => err({ error: true, message: 'Not connected to the server...' }));
+function rq(
+  hostname = '',
+  auth = '',
+  data = {},
+  cb = (data = {}) => null,
+  cb_err = (error = new Error()) => null,
+) {
+  const body = Buffer.from(JSON.stringify({ auth, data }), 'utf8').toString('base64');
 
-  io.on('connection', (socket) => {
-    if (connected) {
-      console.log('Duplicated');
-      socket.emit('FORCE_DISCONNECT');
-      socket.disconnect();
-      return;
-    } else console.log('Connected !');
+  https.request({
+    hostname,
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': body.length,
+    },
+  }, (res) => {
+    let rs = '';
+    
+    res.on('data', (c) => rs += c);
 
-    connected = true;
-
-    socket.on('disconnect', () => {
-      connected = false;
-      console.info(`SocketIO > Disconnected socket ${socket.id}`);
-      revive();
+    res.on('end', () => {
+      console.log('END', rs)
+      if (!rs || !res) return cb_err(new Error('No server response'));
+      try {
+        rs = JSON.parse(Buffer.from(rs, 'base64').toString('utf8'));
+      } catch (err) {
+        if (rs.startsWith('\n<script')) {
+          console.warn('Server overloaded, please wait...');
+        } else return cb_err(new Error('Can\'t parse server response'));
+      }
+      if (!rs.error) {
+        cb(rs);
+      } else return cb_err(new Error(`Request error: ${rs.message}`));
     });
+  })
+  .on('error', (err) => {
+    cb_err(err);
+  })
+  .write(body);
+}
 
-    sendRequest = (sql, data, queryType, fetchType) => {
-      return new Promise((res) => {
-        const uid = (Math.random() * 10 ** 20).toString(36);
-        socket.emit(queryType, sql, data, fetchType, uid);
-        socket.once(`CB_${uid}`, res);
-      });
-    }
-  });
-  
-  function revive() {
-    if (!connected) https.get(`https://${hostname}/?${auth}`, (res) => {
-      let data = '';
-      res.on('data', (d) => data = data + d.toString());
-      res.on('end', () => {
-        console.log(data);
-      });
+module.exports = (hostname = '', auth = '') => {
+  function sendRequest(sql = '', data = {}, fetchMethod = '', fetchType = 0) {
+    return new Promise((res) => {
+      rq(hostname, auth, { sql, data, fetchMethod, fetchType }, res);
     });
   }
-  setInterval(revive, 10000);
-  revive();
-
-  server.listen(localPort);
-  console.info(`SocketIO > listening on port ${localPort}`);
 
   return {
     FETCH: {
@@ -60,5 +62,5 @@ module.exports = (hostname = '', auth = '', localPort = 400, certs = { key: null
         exec: () => sendRequest(sql, data, 'push', 0),
       }
     },
-  }
-};
+  };
+}
